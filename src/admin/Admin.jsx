@@ -7,6 +7,24 @@ function Admin() {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
+    const sendWhatsAppMessage = (appointment, status) => {
+        let phone = appointment.phone.replace(/\D/g, "");
+
+        if (phone.startsWith("0")) {
+            phone = "963" + phone.substring(1);
+        }
+
+        const message =
+            status === "confirmed"
+                ? `مرحباً ${appointment.name}، نؤكد لك موعدك في عيادة لؤلؤة للعناية بالأسنان بتاريخ ${appointment.date} الساعة ${appointment.time}. نتمنى لك يوماً سعيداً.`
+                : `مرحباً ${appointment.name}، نعتذر لإبلاغك بأنه تم إلغاء موعدك في عيادة لؤلؤة للعناية بالأسنان بتاريخ ${appointment.date}. يرجى التواصل معنا لإعادة الحجز.`;
+
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+        window.location.href = url;
+    };
+
     const updateStatus = async (id, status) => {
         try {
             const response = await fetch(
@@ -32,9 +50,12 @@ function Admin() {
                     appointment._id === id ? result.appointment : appointment
                 )
             );
+            return true;
+
         } catch (error) {
             console.error(error);
             alert("تعذر تحديث حالة الحجز.");
+            return false;
         }
     };
 
@@ -201,15 +222,29 @@ function Admin() {
 
                                         <td>
                                             <button
-                                                onClick={() => updateStatus(appointment._id, "confirmed")}
-                                                className="admin-confirm-btn"
+
+                                                onClick={async () => {
+                                                    const success = await updateStatus(appointment._id, "confirmed");
+
+                                                    if (success) {
+                                                        sendWhatsAppMessage(appointment, "confirmed");
+                                                    }
+                                                }}
+
                                             >
                                                 تأكيد
                                             </button>
 
                                             <button
-                                                onClick={() => updateStatus(appointment._id, "cancelled")}
-                                                className="admin-cancel-btn"
+
+                                                onClick={async () => {
+                                                    const success = await updateStatus(appointment._id, "cancelled");
+
+                                                    if (success) {
+                                                        sendWhatsAppMessage(appointment, "cancelled");
+                                                    }
+                                                }}
+
                                             >
                                                 إلغاء
                                             </button>
