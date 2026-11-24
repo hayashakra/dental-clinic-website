@@ -1,13 +1,6 @@
 
 import serverless from "serverless-http";
-import { createRequire } from "node:module";
-import path from "node:path";
-
-const require = createRequire(
-    path.join(process.cwd(), "netlify/functions/api.js")
-);
-
-const { app, connectDB } = require("../../backend/app");
+import { app, connectDB } from "../../backend/app.js";
 
 const expressHandler = serverless(app);
 
