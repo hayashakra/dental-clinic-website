@@ -25,10 +25,13 @@ router.post("/login", loginLimiter, async (req, res) => {
             });
         }
 
-        const isPasswordValid = await bcrypt.compare(
-            password,
-            process.env.ADMIN_PASSWORD_HASH
-        );
+        const hashExists = Boolean(process.env.ADMIN_PASSWORD_HASH);
+        const passwordIsValid = hashExists
+            ? await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH)
+            : false;
+
+        console.log("ADMIN HASH EXISTS:", hashExists);
+        console.log("PASSWORD MATCH:", passwordIsValid);
 
         if (!isPasswordValid) {
             return res.status(401).json({
