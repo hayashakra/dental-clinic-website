@@ -16,8 +16,6 @@ const loginLimiter = rateLimit({
 // Admin login
 router.post("/login", loginLimiter, async (req, res) => {
     try {
-        console.log("Login attempt:", req.body.username);
-
         const { username, password } = req.body;
 
         if (username !== process.env.ADMIN_USERNAME) {
