@@ -33,7 +33,7 @@ router.post("/login", loginLimiter, async (req, res) => {
         console.log("ADMIN HASH EXISTS:", hashExists);
         console.log("PASSWORD MATCH:", passwordIsValid);
 
-        if (!isPasswordValid) {
+        if (!passwordIsValid) {
             return res.status(401).json({
                 message: "بيانات تسجيل الدخول غير صحيحة.",
             });
