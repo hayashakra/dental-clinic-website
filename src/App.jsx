@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Admin from "./admin/Admin";
 
 const services = [
   { icon: "✦", title: "تجميل الأسنان", desc: "ابتسامة متناسقة وجذابة بتقنيات تجميلية حديثة." },
@@ -48,27 +49,61 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  function handleSubmit(e) {
+  if (window.location.pathname.endsWith("/admin")) {
+    return <Admin />;
+  }
+
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    console.log("BOOKING FORM SUBMITTED");
+    setSent(false);
 
     const form = e.target;
     const data = new FormData(form);
 
-    const message =
-      "مرحبا، أريد حجز موعد في عيادة لؤلؤة\n" +
-      "الاسم: " + data.get("name") + "\n" +
-      "رقم الهاتف: " + data.get("phone") + "\n" +
-      "الخدمة: " + data.get("service") + "\n" +
-      "التاريخ: " + data.get("date") + "\n" +
-      "الوقت: " + data.get("time") + "\n" +
-      "ملاحظات: " + data.get("notes");
+    const appointment = {
+      name: data.get("name"),
+      phone: data.get("phone"),
+      email: data.get("email"),
+      service: data.get("service"),
+      date: data.get("date"),
+      time: data.get("time"),
+    };
 
-    window.open(
-      "https://wa.me/963932768982?text=" + encodeURIComponent(message),
-      "_blank"
-    );
+    if (
+      !appointment.name?.trim() ||
+      !appointment.phone?.trim() ||
+      !appointment.service?.trim() ||
+      !appointment.date ||
+      !appointment.time
+    ) {
+      alert("يرجى تعبئة جميع الحقول المطلوبة.");
+      return;
+    }
 
-    setSent(true);
+    try {
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(appointment),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "حدث خطأ أثناء إرسال الطلب");
+      }
+
+      setSent(true);
+      form.reset();
+
+    } catch (error) {
+      console.error("Booking error:", error);
+      alert("تعذر إرسال طلب الحجز. تأكدي أن السيرفر يعمل وحاولي مرة أخرى.");
+    }
   }
 
   return (
@@ -274,6 +309,13 @@ function App() {
             <label>رقم الهاتف</label>
             <input name="phone" required type="tel" placeholder="رقم الهاتف للتواصل" />
 
+            <label>البريد الإلكتروني</label>
+            <input
+              name="email"
+              type="email"
+              placeholder="example@email.com"
+            />
+
             <label>تاريخ الموعد</label>
             <input name="date" type="date" required />
 
@@ -303,13 +345,11 @@ function App() {
 
             {sent && (
               <div className="success-message">
-                تم فتح واتساب لإرسال طلب الحجز.
-              </div>
+                تم إرسال طلب الحجز بنجاح! سنتواصل معك لتأكيد الموعد.              </div>
             )}
 
             <small className="form-note">
-              سيتم إرسال طلبك عبر واتساب، ثم نتواصل معك لتأكيد الموعد.
-            </small>
+              سيتم حفظ طلبك، وسنتواصل معك لتأكيد الموعد.            </small>
           </form>
 
         </section>

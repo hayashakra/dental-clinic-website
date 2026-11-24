@@ -10,7 +10,7 @@ function Admin() {
     const updateStatus = async (id, status) => {
         try {
             const response = await fetch(
-                `http://localhost:5000/api/appointments/${id}`,
+                `/api/appointments/${id}`,
                 {
                     method: "PATCH",
                     headers: {
@@ -60,7 +60,7 @@ function Admin() {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/appointments/${id}`,
+                `/api/appointments${id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -84,7 +84,7 @@ function Admin() {
 
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/appointments", {
+        fetch("/api/appointments", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
