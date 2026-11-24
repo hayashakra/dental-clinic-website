@@ -14,8 +14,7 @@ app.use(cors({
         "http://localhost:5173",
         "http://localhost:5181",
         "https://hayashakra.github.io",
-        "https://dental-clinic-website-v6dz.netlify.app"
-    ],
+        "https://dental-clinic-website-lxay.netlify.app"],
 }));
 
 app.use(helmet());
