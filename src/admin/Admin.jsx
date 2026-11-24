@@ -221,33 +221,37 @@ function Admin() {
                                         </td>
 
                                         <td>
-                                            <button
 
-                                                onClick={async () => {
-                                                    const success = await updateStatus(appointment._id, "confirmed");
 
-                                                    if (success) {
-                                                        sendWhatsAppMessage(appointment, "confirmed");
-                                                    }
-                                                }}
+                                            <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+                                                <button
+                                                    className="admin-confirm-btn"
+                                                    onClick={async () => {
+                                                        const success = await updateStatus(appointment._id, "confirmed");
 
-                                            >
-                                                تأكيد
-                                            </button>
+                                                        if (success) {
+                                                            sendWhatsAppMessage(appointment, "confirmed");
+                                                        }
+                                                    }}
+                                                >
+                                                    تأكيد
+                                                </button>
 
-                                            <button
+                                                <button
+                                                    className="admin-cancel-btn"
+                                                    onClick={async () => {
+                                                        const success = await updateStatus(appointment._id, "cancelled");
 
-                                                onClick={async () => {
-                                                    const success = await updateStatus(appointment._id, "cancelled");
+                                                        if (success) {
+                                                            sendWhatsAppMessage(appointment, "cancelled");
+                                                        }
+                                                    }}
+                                                >
+                                                    إلغاء
+                                                </button>
+                                            </div>
 
-                                                    if (success) {
-                                                        sendWhatsAppMessage(appointment, "cancelled");
-                                                    }
-                                                }}
 
-                                            >
-                                                إلغاء
-                                            </button>
 
 
                                             <button

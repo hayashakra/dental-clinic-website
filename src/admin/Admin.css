@@ -143,6 +143,7 @@
 }
 
 
+
 .admin-confirm-btn,
 .admin-cancel-btn {
     border: none;
@@ -151,9 +152,11 @@
     font-family: inherit;
     font-size: 12px;
     cursor: pointer;
-    margin: 3px;
+    margin: 6px;
+    min-width: 65px;
     transition: 0.3s ease;
 }
+
 
 .admin-confirm-btn {
     background: #e5f2e9;
