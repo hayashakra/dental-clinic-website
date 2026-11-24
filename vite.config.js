@@ -7,4 +7,12 @@ export default defineConfig({
   base: process.env.GITHUB_PAGES === 'true'
     ? '/dental-clinic-website/'
     : '/',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
+  },
 })

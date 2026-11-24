@@ -14,11 +14,17 @@ app.use(cors({
         "http://localhost:5173",
         "http://localhost:5181",
         "https://hayashakra.github.io",
-        "https://dental-clinic-website-lxay.netlify.app"],
+        "https://dental-clinic-website-usfo.netlify.app"
+    ],
 }));
 
 app.use(helmet());
 app.use(express.json());
+app.use((req, res, next) => {
+    console.log("REQUEST RECEIVED:", req.method, req.url);
+    next();
+});
+
 
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin", adminRoutes);

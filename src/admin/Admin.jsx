@@ -60,7 +60,7 @@ function Admin() {
 
         try {
             const response = await fetch(
-                `/api/appointments${id}`,
+                `/api/appointments/${id}`,
                 {
                     method: "DELETE",
                     headers: {

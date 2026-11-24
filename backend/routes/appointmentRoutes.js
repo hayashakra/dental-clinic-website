@@ -77,8 +77,7 @@ router.patch("/:id", adminAuthentication, async (req, res) => {
         const appointment = await Appointment.findByIdAndUpdate(
             req.params.id,
             { status },
-            { new: true, runValidators: true }
-        );
+            { returnDocument: "after", runValidators: true });
 
         if (!appointment) {
             return res.status(404).json({
@@ -103,7 +102,11 @@ router.patch("/:id", adminAuthentication, async (req, res) => {
 // Delete an appointment
 router.delete("/:id", adminAuthentication, async (req, res) => {
     try {
-        const appointment = await Appointment.findByIdAndDelete(req.params.id);
+        console.log("DELETE REQUEST:", req.params.id);
+
+        const appointment = await Appointment.findByIdAndDelete(
+            req.params.id
+        );
 
         if (!appointment) {
             return res.status(404).json({
@@ -111,10 +114,14 @@ router.delete("/:id", adminAuthentication, async (req, res) => {
             });
         }
 
+        console.log("APPOINTMENT DELETED:", appointment._id);
+
         res.status(200).json({
             message: "Appointment deleted successfully!",
         });
     } catch (error) {
+        console.error("DELETE ERROR:", error);
+
         res.status(500).json({
             message: "Failed to delete appointment.",
             error: error.message,
